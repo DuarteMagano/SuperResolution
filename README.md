@@ -18,3 +18,39 @@ Super resolution techniques for quantum simulation.
 ## Model III: Single-impurity model
 
 ## Write paper
+
+
+# Documentation 
+
+## Project structure
+- README.md — project overview, usage and documentation.
+- requirements.txt - libraries used
+- QuantumSimulation.py — lightweight runner / example script for quick tests.
+- report.ipynb — notebook with results.
+- Files/ — output folder for saved figures, CSVs and experiment artifacts.
+- Quantum_Simulation/ — core simulation code:
+  - Floquet.py — driven two-level (Floquet) model implementations and helpers.
+  - HeisenbergTimeIndependent.py — Heisenberg 3-qubit model and utilities.
+- Signal_Analysis/ — analysis routines:
+  - SignalAnalysis.py — DFT/ANM/CS implementations, frequency extraction and error metrics.
+- utils/ — miscellaneous helpers:
+  - NoiseVisualization.py — functions to visualize noise models in quantum hardware.
+
+
+
+## Setup
+Run these commands to create and activate a virtual environment, then install packages from `requirements.txt`:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+To access IBM Quantum Processors, create secret.json with following content
+{
+    "TOKEN": "your_token",
+    "INSTANCE":"your_instance"
+}
+
+To generate a token and an instance sign in on https://quantum.cloud.ibm.com/ 
