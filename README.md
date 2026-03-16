@@ -25,12 +25,11 @@ Super resolution techniques for quantum simulation.
 ## Project structure
 - README.md — project overview, usage and documentation.
 - requirements.txt - libraries used
-- QuantumSimulation.py — lightweight runner / example script for quick tests.
 - report.ipynb — notebook with results.
-- Files/ — output folder for saved figures, CSVs and experiment artifacts.
+- Files/ — results of quantum simulations in txt files
 - Quantum_Simulation/ — core simulation code:
-  - Floquet.py — driven two-level (Floquet) model implementations and helpers.
-  - HeisenbergTimeIndependent.py — Heisenberg 3-qubit model and utilities.
+  - Floquet.py — driven two-level (Floquet) model implementations.
+  - HeisenbergTimeIndependent.py — time-independent Heisenberg 3-qubit model.
 - Signal_Analysis/ — analysis routines:
   - SignalAnalysis.py — DFT/ANM/CS implementations, frequency extraction and error metrics.
 - utils/ — miscellaneous helpers:
