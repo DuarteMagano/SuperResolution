@@ -38,6 +38,20 @@ class Floquet_Simulation():
     def Simpson_integral(self, function, t_in, t_f):
         return 1 / 6 * (t_f - t_in) * (function(t_in) + 4 * function((t_in + t_f) / 2) + function(t_f))
 
+    
+    def U_circular_polarized_I_order(self, dt, t_k):
+        qc = QuantumCircuit(1)
+        h2_0 = self.parameters[1] * np.cos(self.w * t_k)
+        h2_1 = self.parameters[1] * np.sin(self.w * t_k)
+
+        qc.rz(2 * self.parameters[0] * dt, [0])
+        qc.rx(2 * h2_0 * dt, [0])
+        qc.ry(2 * h2_1 * dt, [0])
+
+        return qc.to_gate()
+
+
+
 
     def U_circular_polarized_II_order(self, dt, t_k):
         qc = QuantumCircuit(1)
@@ -57,7 +71,7 @@ class Floquet_Simulation():
         h2 = self.parameters[1] * np.cos(self.w * t_k) 
 
         qc.rz(self.parameters[0] * dt, [0])
-        qc.rx(2 * h2 * dt, [0]) ####################################################################### think about this
+        qc.rx(2 * h2 * dt, [0])  
         qc.rz(self.parameters[0] * dt, [0])
         return qc.to_gate()
     
@@ -100,13 +114,16 @@ class Floquet_Simulation():
         if Polarization == "Circular":
             for i in range(num_Trotter_steps):
                 t_k = t_0 + (i + 1 / 2) * dt
-                qc.append(self.U_circular_polarized_II_order(dt, t_k), [0])
+                if Order_formula == "First":
+                    qc.append(self.U_circular_polarized_I_order(dt, t_k), [0])
+                elif Order_formula == "Second":
+                    qc.append(self.U_circular_polarized_II_order(dt, t_k), [0])     ################ dt/2?
 
         elif Polarization == "Linear":
             if Order_formula == "Second":
                 for i in range(num_Trotter_steps):
                     t_k = t_0 + (i + 1 / 2) * dt
-                    qc.append(self.U_circular_polarized_II_order(dt, t_k), [0])         ################ ERRORRRRRRRRRRRRRRR
+                    qc.append(self.U_circular_polarized_II_order(dt, t_k), [0])         
 
             elif Order_formula == "Fourth":
                 t_i = 0
@@ -141,7 +158,7 @@ class Floquet_Simulation():
                 U = self.evolution_operator(t, 0, num_Trotter_steps, Polarization, Order_formula)                  
                 
                 qc = self.SWAP_test(coeff, U)
-                qc = transpile(qc, backend=self.backend) if self.backend else transpile(qc, self.runner, optimization_level=optimization_level)
+                qc = transpile(qc, backend=self.backend, optimization_level=optimization_level) if self.backend else transpile(qc, self.runner, optimization_level=optimization_level)
                 job = self.runner.run(qc, shots=shots)
                 Prob = job.result().get_counts().get('0', 0) / shots             
                 f.write(f"{t} {Prob} \n")

@@ -228,7 +228,7 @@ class Atomic_Norm_Minimization():
         return (w_in - dw / 2  + nu * (w_f - w_in + dw)) #* (self.n) / (self.n-1)   #shift
     
     def get_spectrum(self, left_lim, right_lim, lam, num_nu = 250, threshold = 1e-2, w_exp = [], plot = True, return_coeff = False):
-        dw, x = self.scale_signal(self.z - 1 / 2, self.t[-1], left_lim , right_lim)
+        dw, x = self.scale_signal(self.z, self.t[-1], left_lim , right_lim)
         p = self.get_polynomial(x, noise=True, lam=lam)
         nu = np.linspace(0, 1, num_nu)
         P = np.abs([np.sum(np.exp(-1j * 2 * np.pi * v * np.arange(np.size(x))) * p) for v in nu])
