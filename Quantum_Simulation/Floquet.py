@@ -26,12 +26,14 @@ class Floquet_Simulation():
         self.parameters = parameters
         self.dimension = dimension
         self.backend = backend
+        self.noisy = noisy
+        self.real_hardware = real_hardware
         noise_model = None
-        if real_hardware:
+        if self.real_hardware:
             pass # Code to be completed for real hardware execution
-        elif noisy:
+        elif self.noisy:
             noise_model = NoiseModel.from_backend(backend)
-            self.runner = AerSimulator(NoiseModel=noise_model)
+            self.runner = AerSimulator(noise_model=noise_model)
         else:
             self.runner = AerSimulator()
 
@@ -152,7 +154,9 @@ class Floquet_Simulation():
     
     def get_distribution0(self, coeff=[1, 0], Polarization="Circular", Order_formula="Second", num_Trotter_steps =100, num_points=3000, shots =10000, optimization_level=0):
         TIME = []; Prob = []
-        fname = f"Files/QuantumSimulation_{Polarization}_Polarization_T={self.T}_Order={Order_formula}_t_MAX={int(num_points / 2) * self.T}_Trotter_steps={num_Trotter_steps}.txt"
+        prefix = "noisy_" if self.noisy else ""
+        prefix = "quantum_hardware_" if self.real_hardware else prefix
+        fname = f"Files/QuantumSimulation_{prefix}{Polarization}_Polarization_T={self.T}_Order={Order_formula}_t_MAX={int(num_points / 2) * self.T}_Trotter_steps={num_Trotter_steps}.txt"
         with open(fname, "w") as f:
             for t in self.T * np.arange(-int(num_points / 2), int(num_points / 2) + 1, 1):
                 U = self.evolution_operator(t, 0, num_Trotter_steps, Polarization, Order_formula)                  

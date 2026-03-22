@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd 
+from IPython.display import display
 
 
 class BackendNoiseVisualizer:
@@ -476,3 +476,14 @@ class BackendNoiseVisualizer:
 
         plt.tight_layout()
         plt.show()
+    
+
+def show_circuit(qc, verbose=True, draw=False):
+    if verbose:
+        dict_gates = qc.count_ops()
+        print("\n=== Circuit Gate Summary ===")
+        for gate, count in sorted(dict_gates.items(), key=lambda x: -x[1]):
+            if gate not in ["reset", "barrier", "measure"]:
+                print(f"{gate.upper():>5} : {count}")
+    if draw:
+        display(qc.draw("mpl"))
